@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi Sitio Web</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+}
+
+header{
+    background:#0d6efd;
+    color:white;
+    text-align:center;
+    padding:50px;
+}
+
+section{
+    padding:50px 0;
+}
+
+.card{
+    transition:.3s;
+    box-shadow:0 5px 10px rgba(0,0,0,.2);
+}
+
+.card:hover{
+    transform:scale(1.05);
+}
+
+footer{
+    background:#212529;
+    color:white;
+    text-align:center;
+    padding:20px;
+    margin-top:30px;
+}
+
+img{
+    border-radius:10px;
+}
+
+@media(max-width:768px){
+    header{
+        padding:30px;
+    }
+
+    h1{
+        font-size:28px;
+    }
+
+    .card{
+        margin-bottom:20px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<header id="inicio">
+<h1>Bienvenidos a Mi Sitio Web</h1>
+<p>Proyecto desarrollado con HTML, CSS3 y Bootstrap 5</p>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<div class="container">
+
+<a class="navbar-brand" href="#">Mi Empresa</a>
+
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="menu">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="#inicio">Inicio</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#nosotros">Quiénes Somos</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#servicios">Servicios</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="#contacto">Contacto</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+</nav>
+
+<main>
+
+<section class="container text-center">
+
+<h2>Inicio</h2>
+
+<p>
+Somos una empresa dedicada al desarrollo de páginas web modernas,
+responsivas y de alta calidad.
+</p>
+
+<a href="#contacto" class="btn btn-primary">
+Contáctanos
+</a>
+
+</section>
+
+<section id="nosotros" class="container">
+
+<div class="row align-items-center">
+
+<div class="col-md-6">
+
+<img src="img/nosotros.jpg" class="img-fluid" alt="Nosotros">
+
+</div>
+
+<div class="col-md-6">
+
+<h2>Quiénes Somos</h2>
+
+<p>
+Somos un equipo comprometido con el diseño y desarrollo de sitios web
+utilizando tecnologías modernas como HTML5, CSS3 y Bootstrap.
+Nuestro objetivo es brindar soluciones innovadoras para empresas y
+emprendedores.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="servicios" class="container">
+
+<h2 class="text-center mb-5">
+Nuestros Servicios
+</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="card">
+
+<img src="img/servicio1.jpg" class="card-img-top" alt="Servicio 1">
+
+<div class="card-body">
+
+<h5>Diseño Web</h5>
+
+<p>
+Creamos páginas web modernas y atractivas.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card">
+
+<img src="img/servicio2.jpg" class="card-img-top" alt="Servicio 2">
+
+<div class="card-body">
+
+<h5>Desarrollo Web</h5>
+
+<p>
+Desarrollamos aplicaciones web responsivas utilizando Bootstrap.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card">
+
+<img src="img/servicio3.jpg" class="card-img-top" alt="Servicio 3">
+
+<div class="card-body">
+
+<h5>Soporte Técnico</h5>
+
+<p>
+Brindamos mantenimiento y soporte para sitios web.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section id="contacto" class="container">
+
+<h2 class="text-center mb-4">
+Contacto
+</h2>
+
+<form>
+
+<div class="mb-3">
+<input type="text" class="form-control" placeholder="Nombre">
+</div>
+
+<div class="mb-3">
+<input type="email" class="form-control" placeholder="Correo Electrónico">
+</div>
+
+<div class="mb-3">
+<input type="text" class="form-control" placeholder="Asunto">
+</div>
+
+<div class="mb-3">
+<textarea class="form-control" rows="5" placeholder="Mensaje"></textarea>
+</div>
+
+<div class="text-center">
+
+<button class="btn btn-success">
+Enviar Mensaje
+</button>
+
+<a href="mailto:correo@empresa.com" class="btn btn-primary m-2">
+Correo
+</a>
+
+<a href="https://facebook.com" class="btn btn-info m-2">
+Facebook
+</a>
+
+<a href="https://maps.google.com" class="btn btn-warning m-2">
+Ubicación
+</a>
+
+</div>
+
+</form>
+
+</section>
+
+</main>
+
+<footer>
+
+<p>© 2026 Mi Empresa - Todos los derechos reservados.</p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
