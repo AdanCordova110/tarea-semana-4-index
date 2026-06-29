@@ -227,45 +227,40 @@ Brindamos mantenimiento y soporte para sitios web.
 Contacto
 </h2>
 
-<form>
+<form id="miFormulario">
 
 <div class="mb-3">
-<input type="text" class="form-control" placeholder="Nombre">
+<input type="text" id="nombre" class="form-control" placeholder="Nombre">
 </div>
 
 <div class="mb-3">
-<input type="email" class="form-control" placeholder="Correo Electrónico">
+<input type="text" id="descripcion" class="form-control" placeholder="Descripción">
 </div>
 
 <div class="mb-3">
-<input type="text" class="form-control" placeholder="Asunto">
-</div>
-
-<div class="mb-3">
-<textarea class="form-control" rows="5" placeholder="Mensaje"></textarea>
+<select id="categoria" class="form-control">
+<option value="">Seleccione una categoría</option>
+<option>Diseño Web</option>
+<option>Desarrollo Web</option>
+<option>Soporte Técnico</option>
+</select>
 </div>
 
 <div class="text-center">
-
-<button class="btn btn-success">
-Enviar Mensaje
+<button type="submit" class="btn btn-success">
+Agregar Registro
 </button>
-
-<a href="mailto:correo@empresa.com" class="btn btn-primary m-2">
-Correo
-</a>
-
-<a href="https://facebook.com" class="btn btn-info m-2">
-Facebook
-</a>
-
-<a href="https://maps.google.com" class="btn btn-warning m-2">
-Ubicación
-</a>
-
 </div>
 
 </form>
+
+<br>
+
+<h4>Total de registros:
+<span id="total">0</span>
+</h4>
+
+<div id="listaRegistros" class="row"></div>
 
 </section>
 
@@ -279,5 +274,6 @@ Ubicación
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
+<script src="script.js"></script>
 </body>
 </html>
