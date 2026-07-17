@@ -13,11 +13,13 @@
 
 <body>
 
-<header id="inicio">
+<!-- Encabezado (En una aplicación futura podría ir en base.html) -->
+    <header id="inicio">
 <h1>Bienvenidos a Mi Sitio Web</h1>
 <p>Proyecto desarrollado con HTML, CSS3 y Bootstrap 5</p>
 </header>
 
+<!-- Menú de navegación -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 <div class="container">
 
@@ -47,6 +49,9 @@
 <a class="nav-link" href="#contacto">Contacto</a>
 </li>
 
+<li class="nav-item">
+    <a class="nav-link" href="#registros">Registros</a>
+</li>
 </ul>
 
 </div>
@@ -54,6 +59,7 @@
 </div>
 </nav>
 
+<!-- Contenido principal -->
 <main>
 
 <section class="container text-center">
@@ -213,9 +219,24 @@ Agregar Registro
 <div id="listaRegistros" class="row"></div>
 
 </section>
+<section id="registros" class="container mt-5">
 
+<h2 class="text-center mb-4">
+Registros del Proyecto
+</h2>
+
+<p id="estadoRegistros" class="text-center text-muted">
+No existen registros todavía.
+</p>
+
+<div id="contenidoDinamico" class="row">
+
+</div>
+
+</section>
 </main>
 
+<!-- Pie de página -->
 <footer>
 
 <p>© 2026 Mi Empresa - Todos los derechos reservados.</p>

@@ -8,6 +8,10 @@ const total = document.getElementById("total");
 const mensaje = document.getElementById("mensaje");
 
 let contador = 0;
+let registros = [];
+
+const contenido = document.getElementById("contenidoDinamico");
+const estado = document.getElementById("estadoRegistros");
 
 // Validar nombre
 function validarNombre(){
@@ -66,6 +70,63 @@ function validarCategoria(){
 
 }
 
+function mostrarRegistros(){
+
+    contenido.innerHTML = "";
+
+    if(registros.length === 0){
+
+        estado.textContent = "No existen registros todavía.";
+
+        return;
+
+    }
+
+    estado.textContent = "";
+
+    registros.forEach((registro, indice)=>{
+
+        const columna = document.createElement("div");
+
+        columna.className = "col-md-4 mt-3";
+
+        columna.innerHTML = `
+        <div class="card shadow p-3">
+
+            <h4>${registro.nombre}</h4>
+
+            <p>${registro.descripcion}</p>
+
+            <p><strong>Categoría:</strong> ${registro.categoria}</p>
+
+            <button class="btn btn-danger eliminar" data-id="${indice}">
+                Eliminar
+            </button>
+
+        </div>
+        `;
+
+        contenido.appendChild(columna);
+
+    });
+
+    document.querySelectorAll(".eliminar").forEach(boton=>{
+
+        boton.addEventListener("click",function(){
+
+            registros.splice(this.dataset.id,1);
+
+            contador--;
+
+            total.textContent=contador;
+
+            mostrarRegistros();
+
+        });
+
+    });
+
+}
 nombre.addEventListener("input", validarNombre);
 nombre.addEventListener("blur", validarNombre);
 
@@ -94,45 +155,21 @@ formulario.addEventListener("submit",function(e){
         return;
     }
 
-    contador++;
+contador++;
 
-    total.textContent=contador;
+total.textContent = contador;
 
-    const columna=document.createElement("div");
+registros.push({
 
-    columna.className="col-md-4 mt-3";
+    nombre: nombre.value,
 
-    const card=document.createElement("div");
+    descripcion: descripcion.value,
 
-    card.className="card shadow p-3";
+    categoria: categoria.value
 
-    card.innerHTML=`
-    <h4>${nombre.value}</h4>
-    <p>${descripcion.value}</p>
-    <p><strong>Categoría:</strong> ${categoria.value}</p>
-    `;
+});
 
-    const boton=document.createElement("button");
-
-    boton.textContent="Eliminar";
-
-    boton.className="btn btn-danger";
-
-    boton.addEventListener("click",function(){
-
-        columna.remove();
-
-        contador--;
-
-        total.textContent=contador;
-
-    });
-
-    card.appendChild(boton);
-
-    columna.appendChild(card);
-
-    lista.appendChild(columna);
+mostrarRegistros();
 
     mensaje.innerHTML=`
     <div class="alert alert-success">
