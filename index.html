@@ -16,7 +16,7 @@
 <!-- Encabezado (En una aplicación futura podría ir en base.html) -->
     <header id="inicio">
 <h1>Bienvenidos a Mi Sitio Web</h1>
-<p>Proyecto desarrollado con HTML, CSS3 y Bootstrap 5</p>
+<p>Sistema web desarrollado con HTML5, CSS3, Bootstrap 5 y JavaScript.</p>
 </header>
 
 <!-- Menú de navegación -->
@@ -62,6 +62,13 @@
 <!-- Contenido principal -->
 <main>
 
+    <div id="mensajeBootstrap" class="alert alert-success alert-dismissible fade show d-none mt-3" role="alert">
+
+    <strong>¡Excelente!</strong> El registro se agregó correctamente.
+
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+
+</div>
 <section class="container text-center">
 
 <h2>Inicio</h2>
@@ -183,6 +190,21 @@ Contacto
 </h2>
 <div id="mensaje"></div>
 
+<div id="spinnerCarga" class="text-center my-4 d-none">
+
+    <div class="spinner-border text-primary" role="status">
+
+        <span class="visually-hidden">
+            Cargando...
+        </span>
+
+    </div>
+
+    <p class="mt-2">
+        Procesando información...
+    </p>
+
+</div>
 <form id="miFormulario">
 
 <div class="mb-3">
@@ -203,8 +225,8 @@ Contacto
 </div>
 
 <div class="text-center">
-<button type="submit" class="btn btn-success">
-Agregar Registro
+<button type="submit" class="btn btn-success w-100">
+    Registrar Información
 </button>
 </div>
 
@@ -216,7 +238,7 @@ Agregar Registro
 <span id="total">0</span>
 </h4>
 
-<div id="listaRegistros" class="row"></div>
+<div id="contenidoDinamico" class="row"></div>
 
 </section>
 <section id="registros" class="container mt-5">
@@ -237,6 +259,51 @@ No existen registros todavía.
 </main>
 
 <!-- Pie de página -->
+<div class="modal fade" id="modalRegistro" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header bg-primary text-white">
+
+                <h5 class="modal-title">
+                    Información del Registro
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p id="detalleRegistro">
+                    Aquí aparecerá la información del registro.
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+
+                    Cerrar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <footer>
 
 <p>© 2026 Mi Empresa - Todos los derechos reservados.</p>
