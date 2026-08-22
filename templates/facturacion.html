@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Facturación{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+    <h2>Facturación</h2>
+    <p class="text-muted">
+        Registro y consulta de facturas del sistema.
+    </p>
+</div>
+
+<div class="alert alert-info" role="alert">
+    <strong>Información:</strong>
+    Este módulo utiliza datos de ejemplo para representar
+    el funcionamiento de la facturación.
+</div>
+
+<div class="table-responsive">
+
+    <table class="table table-bordered table-hover shadow">
+
+        <thead class="table-primary">
+
+            <tr>
+                <th>Factura</th>
+                <th>Cliente</th>
+                <th>Total</th>
+                <th>Estado</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>FAC-001</td>
+                <td>Juan Pérez</td>
+                <td>$150.00</td>
+                <td>
+                    <span class="badge bg-success">
+                        Pagada
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>FAC-002</td>
+                <td>María López</td>
+                <td>$225.00</td>
+                <td>
+                    <span class="badge bg-warning text-dark">
+                        Pendiente
+                    </span>
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

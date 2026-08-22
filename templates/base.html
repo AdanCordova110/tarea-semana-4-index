@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Mi Empresa{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- CSS propio -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"
+    >
+</head>
+
+<body>
+
+    <!-- Encabezado común -->
+    <header class="bg-primary text-white text-center p-4">
+        <h1>Mi Empresa</h1>
+        <p>Proyecto web desarrollado con Flask, Jinja2 y Bootstrap</p>
+    </header>
+
+
+    <!-- Menú de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <div class="container">
+
+            <a class="navbar-brand" href="{{ url_for('inicio') }}">
+                Mi Empresa
+            </a>
+
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#menu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menu">
+
+                <ul class="navbar-nav ms-auto">
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('inicio') }}">
+                            Inicio
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('productos') }}">
+                            Productos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('clientes') }}">
+                            Clientes
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('proveedores') }}">
+                            Proveedores
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('facturacion') }}">
+                            Facturación
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- Contenido que cambiará en cada página -->
+    <main class="container py-5">
+
+        {% block content %}
+
+        {% endblock %}
+
+    </main>
+
+
+    <!-- Pie de página común -->
+    <footer class="bg-dark text-white text-center p-4">
+
+        <p class="mb-0">
+            © 2026 Mi Empresa - Todos los derechos reservados.
+        </p>
+
+    </footer>
+
+
+    <!-- Bootstrap JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <!-- JavaScript propio -->
+    <script
+        src="{{ url_for('static', filename='js/script.js') }}">
+    </script>
+
+</body>
+
+</html>

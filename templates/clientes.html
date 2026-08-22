@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{% block content %}
+
+<div class="text-center mb-5">
+    <h2>Clientes</h2>
+    <p class="text-muted">
+        Información básica de los clientes registrados.
+    </p>
+</div>
+
+<div class="table-responsive">
+
+    <table class="table table-striped table-hover shadow">
+
+        <thead class="table-primary">
+            <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td>1</td>
+                <td>Juan Pérez</td>
+                <td>juan@email.com</td>
+                <td>
+                    <span class="badge bg-success">Activo</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>María López</td>
+                <td>maria@email.com</td>
+                <td>
+                    <span class="badge bg-success">Activo</span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>3</td>
+                <td>Carlos Gómez</td>
+                <td>carlos@email.com</td>
+                <td>
+                    <span class="badge bg-secondary">Inactivo</span>
+                </td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
