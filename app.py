@@ -1,3 +1,6 @@
+import sqlite3
+import os
+
 from flask import Flask, render_template, redirect, url_for, flash
 
 from forms.producto_form import ProductoForm
@@ -9,6 +12,39 @@ from forms.facturacion_form import FacturacionForm
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "clave-secreta-semana-11"
 
+# ==========================================
+# CONFIGURACIÓN DE LA BASE DE DATOS
+# ==========================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "data", "ferreteria.db")
+
+
+def conectar_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def crear_tabla_productos():
+    conn = conectar_db()
+
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS productos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            categoria TEXT NOT NULL,
+            precio REAL NOT NULL,
+            stock INTEGER NOT NULL
+        )
+    """)
+
+    conn.commit()
+    conn.close()
+
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
 
 # ==========================================
 # DATOS DEL PROYECTO
@@ -18,32 +54,7 @@ empresa = "Mi Empresa"
 
 
 # PRODUCTOS
-productos_lista = [
-    {
-        "nombre": "Diseño Web",
-        "precio": 250.00,
-        "stock": 10,
-        "categoria": "Desarrollo"
-    },
-    {
-        "nombre": "Desarrollo Web",
-        "precio": 450.00,
-        "stock": 5,
-        "categoria": "Desarrollo"
-    },
-    {
-        "nombre": "Soporte Técnico",
-        "precio": 80.00,
-        "stock": 0,
-        "categoria": "Soporte"
-    },
-    {
-        "nombre": "Mantenimiento Web",
-        "precio": 120.00,
-        "stock": 8,
-        "categoria": "Mantenimiento"
-    }
-]
+
 
 
 # CLIENTES
@@ -132,10 +143,18 @@ def inicio():
 @app.route("/productos")
 def productos():
 
+    conn = conectar_db()
+
+    productos_db = conn.execute(
+        "SELECT * FROM productos"
+    ).fetchall()
+
+    conn.close()
+
     return render_template(
         "productos.html",
         empresa=empresa,
-        productos=productos_lista
+        productos=productos_db
     )
 
 
@@ -146,17 +165,26 @@ def nuevo_producto():
 
     if form.validate_on_submit():
 
-        producto = {
-            "nombre": form.nombre.data,
-            "categoria": form.categoria.data,
-            "precio": float(form.precio.data),
-            "stock": form.stock.data
-        }
+        conn = conectar_db()
 
-        productos_lista.append(producto)
+        conn.execute(
+            """
+            INSERT INTO productos (nombre, categoria, precio, stock)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                form.nombre.data,
+                form.categoria.data,
+                float(form.precio.data),
+                form.stock.data
+            )
+        )
+
+        conn.commit()
+        conn.close()
 
         flash(
-            "Producto registrado correctamente.",
+            "Producto guardado correctamente en la base de datos.",
             "success"
         )
 
@@ -300,4 +328,5 @@ def nueva_factura():
 # ==========================================
 
 if __name__ == "__main__":
+    crear_tabla_productos()
     app.run(debug=True)
