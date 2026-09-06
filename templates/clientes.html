@@ -4,10 +4,15 @@
 
 {% block content %}
 
+<a href="{{ url_for('nuevo_cliente') }}"
+   class="btn btn-primary mb-4">
+    Nuevo cliente
+</a>
+
 <div class="text-center mb-5">
     <h2>Clientes</h2>
     <p class="text-muted">
-        Información de los clientes registrados.
+        Información de los clientes registrados en {{ empresa }}.
     </p>
 </div>
 
@@ -20,7 +25,7 @@
                 <th>#</th>
                 <th>Nombre</th>
                 <th>Correo</th>
-                <th>Estado</th>
+                <th>Teléfono</th>
             </tr>
         </thead>
 
@@ -30,26 +35,9 @@
 
             <tr>
                 <td>{{ loop.index }}</td>
-
                 <td>{{ cliente.nombre }}</td>
-
                 <td>{{ cliente.correo|lower }}</td>
-
-                <td>
-                    {% if cliente.estado == "Activo" %}
-
-                        <span class="badge bg-success">
-                            {{ cliente.estado }}
-                        </span>
-
-                    {% else %}
-
-                        <span class="badge bg-secondary">
-                            {{ cliente.estado }}
-                        </span>
-
-                    {% endif %}
-                </td>
+                <td>{{ cliente.telefono }}</td>
             </tr>
 
             {% endfor %}
@@ -59,5 +47,19 @@
     </table>
 
 </div>
+
+{% if clientes|length > 0 %}
+
+<div class="alert alert-success mt-4">
+    Se encontraron {{ clientes|length }} clientes registrados.
+</div>
+
+{% else %}
+
+<div class="alert alert-warning mt-4">
+    No existen clientes registrados actualmente.
+</div>
+
+{% endif %}
 
 {% endblock %}

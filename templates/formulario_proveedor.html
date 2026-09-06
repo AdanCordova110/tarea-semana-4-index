@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar Proveedor{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-7">
+
+        <div class="card shadow">
+
+            <div class="card-body">
+
+                <h2 class="text-center mb-4">
+                    Registrar Proveedor
+                </h2>
+
+                <form method="POST">
+
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+
+                        {{ form.nombre.label(class="form-label") }}
+
+                        {{ form.nombre(class="form-control") }}
+
+                        {% for error in form.nombre.errors %}
+                            <div class="text-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        {{ form.servicio.label(class="form-label") }}
+
+                        {{ form.servicio(class="form-control") }}
+
+                        {% for error in form.servicio.errors %}
+                            <div class="text-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        {{ form.estado.label(class="form-label") }}
+
+                        {{ form.estado(class="form-control") }}
+
+                        {% for error in form.estado.errors %}
+                            <div class="text-danger">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="d-grid">
+
+                        {{ form.enviar(class="btn btn-primary") }}
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

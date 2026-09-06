@@ -35,6 +35,28 @@
 
     <!-- Contenido que cambiará en cada página -->
     <main class="container py-5">
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+
+    {% if mensajes %}
+
+        {% for categoria, mensaje in mensajes %}
+
+            <div class="alert alert-{{ categoria }} alert-dismissible fade show" role="alert">
+
+                {{ mensaje }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
 
         {% block content %}
 
@@ -43,14 +65,7 @@
     </main>
 
 
-    <!-- Pie de página común -->
-    <footer class="bg-dark text-white text-center p-4">
-
-        <p class="mb-0">
-            © 2026 Mi Empresa - Todos los derechos reservados.
-        </p>
-
-    </footer>
+    {% include "components/footer.html" %}
 
 
     <!-- Bootstrap JavaScript -->
