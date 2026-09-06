@@ -7,30 +7,47 @@
 <div class="text-center mb-5">
     <h2>Proveedores</h2>
     <p class="text-muted">
-        Información de los proveedores del proyecto.
+        Información de los proveedores de la empresa.
     </p>
 </div>
 
 <div class="row">
 
-    <div class="col-md-6 mb-4">
+    {% for proveedor in proveedores %}
+
+    <div class="col-md-4 mb-4">
 
         <div class="card shadow h-100">
 
             <div class="card-body">
 
                 <h5 class="card-title">
-                    Proveedor Tecnológico
+                    {{ proveedor.empresa }}
                 </h5>
 
-                <p>
-                    Empresa dedicada al suministro de equipos
-                    y soluciones tecnológicas.
+                <p class="card-text">
+                    <strong>Contacto:</strong>
+                    {{ proveedor.contacto }}
                 </p>
 
-                <span class="badge bg-primary">
-                    Proveedor activo
-                </span>
+                <p class="card-text">
+                    <strong>Teléfono:</strong>
+                    {{ proveedor.telefono }}
+                </p>
+
+                {% if proveedor.telefono %}
+
+                    <span class="badge bg-success">
+                        Contacto disponible
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-warning text-dark">
+                        Sin contacto
+                    </span>
+
+                {% endif %}
 
             </div>
 
@@ -38,30 +55,7 @@
 
     </div>
 
-    <div class="col-md-6 mb-4">
-
-        <div class="card shadow h-100">
-
-            <div class="card-body">
-
-                <h5 class="card-title">
-                    Proveedor de Servicios
-                </h5>
-
-                <p>
-                    Proveedor encargado de servicios necesarios
-                    para el funcionamiento del proyecto.
-                </p>
-
-                <span class="badge bg-primary">
-                    Proveedor activo
-                </span>
-
-            </div>
-
-        </div>
-
-    </div>
+    {% endfor %}
 
 </div>
 

@@ -7,7 +7,7 @@
 <div class="text-center mb-5">
     <h2>Clientes</h2>
     <p class="text-muted">
-        Información básica de los clientes registrados.
+        Información de los clientes registrados.
     </p>
 </div>
 
@@ -26,32 +26,33 @@
 
         <tbody>
 
+            {% for cliente in clientes %}
+
             <tr>
-                <td>1</td>
-                <td>Juan Pérez</td>
-                <td>juan@email.com</td>
+                <td>{{ loop.index }}</td>
+
+                <td>{{ cliente.nombre }}</td>
+
+                <td>{{ cliente.correo|lower }}</td>
+
                 <td>
-                    <span class="badge bg-success">Activo</span>
+                    {% if cliente.estado == "Activo" %}
+
+                        <span class="badge bg-success">
+                            {{ cliente.estado }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary">
+                            {{ cliente.estado }}
+                        </span>
+
+                    {% endif %}
                 </td>
             </tr>
 
-            <tr>
-                <td>2</td>
-                <td>María López</td>
-                <td>maria@email.com</td>
-                <td>
-                    <span class="badge bg-success">Activo</span>
-                </td>
-            </tr>
-
-            <tr>
-                <td>3</td>
-                <td>Carlos Gómez</td>
-                <td>carlos@email.com</td>
-                <td>
-                    <span class="badge bg-secondary">Inactivo</span>
-                </td>
-            </tr>
+            {% endfor %}
 
         </tbody>
 

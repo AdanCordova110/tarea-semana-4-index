@@ -13,41 +13,43 @@
 
 <div class="row">
 
-    <div class="col-md-4 mb-4">
-        <div class="card shadow h-100">
-            <div class="card-body">
-                <h5 class="card-title">Producto 1</h5>
-                <p class="card-text">
-                    Producto de ejemplo para representar el módulo.
-                </p>
-                <span class="badge bg-success">Disponible</span>
-            </div>
-        </div>
-    </div>
+    {% for producto in productos %}
 
     <div class="col-md-4 mb-4">
+
         <div class="card shadow h-100">
+
             <div class="card-body">
-                <h5 class="card-title">Producto 2</h5>
+
+                <h5 class="card-title">
+                    {{ producto.nombre }}
+                </h5>
+
                 <p class="card-text">
-                    Segundo producto de ejemplo del sistema.
+                    Precio: ${{ producto.precio }}
                 </p>
-                <span class="badge bg-success">Disponible</span>
+
+                {% if producto.stock > 0 %}
+
+                    <span class="badge bg-success">
+                        Disponible - Stock: {{ producto.stock }}
+                    </span>
+
+                {% else %}
+
+                    <span class="badge bg-danger">
+                        Agotado
+                    </span>
+
+                {% endif %}
+
             </div>
+
         </div>
+
     </div>
 
-    <div class="col-md-4 mb-4">
-        <div class="card shadow h-100">
-            <div class="card-body">
-                <h5 class="card-title">Producto 3</h5>
-                <p class="card-text">
-                    Tercer producto de ejemplo.
-                </p>
-                <span class="badge bg-warning text-dark">Stock limitado</span>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 
 </div>
 
