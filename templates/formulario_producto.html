@@ -1,95 +1,104 @@
 {% extends "base.html" %}
 
-{% block title %}Registrar Producto{% endblock %}
+{% block title %}
+    {% if editando %}
+        Editar producto
+    {% else %}
+        Nuevo producto
+    {% endif %}
+{% endblock %}
 
 {% block content %}
 
-<div class="row justify-content-center">
+<div class="container">
+    <div class="card shadow p-4">
 
-    <div class="col-md-7">
+        <h2 class="mb-4">
+            {% if editando %}
+                Editar producto
+            {% else %}
+                Registrar producto
+            {% endif %}
+        </h2>
 
-        <div class="card shadow">
+        <form method="POST">
 
-            <div class="card-body">
+            {{ form.hidden_tag() }}
 
-                <h2 class="text-center mb-4">
-                    Registrar Producto
-                </h2>
+            <div class="mb-3">
+                {{ form.nombre.label(class="form-label") }}
 
-                <form method="POST">
+                {{ form.nombre(class="form-control") }}
 
-                    {{ form.hidden_tag() }}
-
-                    <div class="mb-3">
-
-                        {{ form.nombre.label(class="form-label") }}
-
-                        {{ form.nombre(class="form-control") }}
-
-                        {% for error in form.nombre.errors %}
-                            <div class="text-danger">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
+                {% for error in form.nombre.errors %}
+                    <div class="text-danger">
+                        {{ error }}
                     </div>
+                {% endfor %}
+            </div>
 
-                    <div class="mb-3">
+            <div class="mb-3">
+                {{ form.categoria.label(class="form-label") }}
 
-                        {{ form.categoria.label(class="form-label") }}
+                {{ form.categoria(class="form-control") }}
 
-                        {{ form.categoria(class="form-control") }}
-
-                        {% for error in form.categoria.errors %}
-                            <div class="text-danger">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
+                {% for error in form.categoria.errors %}
+                    <div class="text-danger">
+                        {{ error }}
                     </div>
+                {% endfor %}
+            </div>
 
-                    <div class="mb-3">
+            <div class="mb-3">
+                {{ form.precio.label(class="form-label") }}
 
-                        {{ form.precio.label(class="form-label") }}
+                {{ form.precio(class="form-control") }}
 
-                        {{ form.precio(class="form-control") }}
-
-                        {% for error in form.precio.errors %}
-                            <div class="text-danger">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
+                {% for error in form.precio.errors %}
+                    <div class="text-danger">
+                        {{ error }}
                     </div>
+                {% endfor %}
+            </div>
 
-                    <div class="mb-3">
+            <div class="mb-3">
+                {{ form.stock.label(class="form-label") }}
 
-                        {{ form.stock.label(class="form-label") }}
+                {{ form.stock(class="form-control") }}
 
-                        {{ form.stock(class="form-control") }}
-
-                        {% for error in form.stock.errors %}
-                            <div class="text-danger">
-                                {{ error }}
-                            </div>
-                        {% endfor %}
-
+                {% for error in form.stock.errors %}
+                    <div class="text-danger">
+                        {{ error }}
                     </div>
+                {% endfor %}
+            </div>
 
-                    <div class="d-grid">
+            <div class="mb-3">
+                {{ form.id_proveedor.label(class="form-label") }}
 
-                        {{ form.enviar(class="btn btn-primary") }}
+                {{ form.id_proveedor(class="form-select") }}
 
+                {% for error in form.id_proveedor.errors %}
+                    <div class="text-danger">
+                        {{ error }}
                     </div>
+                {% endfor %}
+            </div>
 
-                </form>
+            <div class="mt-4">
+
+                {{ form.enviar(class="btn btn-primary") }}
+
+                <a href="{{ url_for('productos') }}"
+                   class="btn btn-secondary">
+                    Cancelar
+                </a>
 
             </div>
 
-        </div>
+        </form>
 
     </div>
-
 </div>
 
 {% endblock %}

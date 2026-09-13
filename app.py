@@ -1,6 +1,3 @@
-import sqlite3
-import os
-
 from flask import Flask, render_template, redirect, url_for, flash
 
 from forms.producto_form import ProductoForm
@@ -8,43 +5,26 @@ from forms.cliente_form import ClienteForm
 from forms.proveedor_form import ProveedorForm
 from forms.facturacion_form import FacturacionForm
 
+from conexion import obtener_conexion
+
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "clave-secreta-semana-11"
 
+
 # ==========================================
-# CONFIGURACIÓN DE LA BASE DE DATOS
+# PROBAR CONEXIÓN MYSQL
 # ==========================================
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "data", "ferreteria.db")
+def probar_conexion():
+    try:
+        conexion = obtener_conexion()
+        print("Conexión a MySQL exitosa. - app.py:22")
+        conexion.close()
+    except Exception as error:
+        print("Error al conectar con MySQL: - app.py:25")
+        print(error)
 
-
-def conectar_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def crear_tabla_productos():
-    conn = conectar_db()
-
-    conn.execute("""
-        CREATE TABLE IF NOT EXISTS productos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre TEXT NOT NULL,
-            categoria TEXT NOT NULL,
-            precio REAL NOT NULL,
-            stock INTEGER NOT NULL
-        )
-    """)
-
-    conn.commit()
-    conn.close()
-
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 # ==========================================
 # DATOS DEL PROYECTO
@@ -53,11 +33,10 @@ def crear_tabla_productos():
 empresa = "Mi Empresa"
 
 
-# PRODUCTOS
+# ==========================================
+# CLIENTES TEMPORALES
+# ==========================================
 
-
-
-# CLIENTES
 clientes_lista = [
     {
         "nombre": "Carlos Mendoza",
@@ -77,7 +56,10 @@ clientes_lista = [
 ]
 
 
-# PROVEEDORES
+# ==========================================
+# PROVEEDORES TEMPORALES
+# ==========================================
+
 proveedores_lista = [
     {
         "nombre": "Tech Solutions",
@@ -97,7 +79,10 @@ proveedores_lista = [
 ]
 
 
-# FACTURAS
+# ==========================================
+# FACTURAS TEMPORALES
+# ==========================================
+
 facturas_lista = [
     {
         "numero": "FAC-001",
@@ -137,19 +122,33 @@ def inicio():
 
 
 # ==========================================
-# MÓDULO DE PRODUCTOS
+# MÓDULO DE PRODUCTOS - MYSQL
 # ==========================================
 
 @app.route("/productos")
 def productos():
 
-    conn = conectar_db()
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
 
-    productos_db = conn.execute(
-        "SELECT * FROM productos"
-    ).fetchall()
+    cursor.execute("""
+        SELECT
+            p.id_producto,
+            p.nombre,
+            p.categoria,
+            p.precio,
+            p.stock,
+            p.id_proveedor,
+            pr.nombre AS proveedor_nombre
+        FROM productos p
+        LEFT JOIN proveedores pr
+            ON p.id_proveedor = pr.id_proveedor
+    """)
 
-    conn.close()
+    productos_db = cursor.fetchall()
+
+    cursor.close()
+    conexion.close()
 
     return render_template(
         "productos.html",
@@ -158,33 +157,59 @@ def productos():
     )
 
 
+# ==========================================
+# AGREGAR PRODUCTO - INSERT
+# ==========================================
+
 @app.route("/productos/nuevo", methods=["GET", "POST"])
 def nuevo_producto():
 
     form = ProductoForm()
 
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    cursor.execute(
+        "SELECT id_proveedor, nombre FROM proveedores"
+    )
+
+    proveedores = cursor.fetchall()
+
+    cursor.close()
+    conexion.close()
+
+    form.id_proveedor.choices = [
+        (proveedor["id_proveedor"], proveedor["nombre"])
+        for proveedor in proveedores
+    ]
+
     if form.validate_on_submit():
 
-        conn = conectar_db()
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
 
-        conn.execute(
-            """
-            INSERT INTO productos (nombre, categoria, precio, stock)
-            VALUES (?, ?, ?, ?)
-            """,
-            (
-                form.nombre.data,
-                form.categoria.data,
-                float(form.precio.data),
-                form.stock.data
-            )
+        sql = """
+            INSERT INTO productos
+            (nombre, categoria, precio, stock, id_proveedor)
+            VALUES (%s, %s, %s, %s, %s)
+        """
+
+        valores = (
+            form.nombre.data,
+            form.categoria.data,
+            float(form.precio.data),
+            form.stock.data,
+            form.id_proveedor.data
         )
 
-        conn.commit()
-        conn.close()
+        cursor.execute(sql, valores)
+        conexion.commit()
+
+        cursor.close()
+        conexion.close()
 
         flash(
-            "Producto guardado correctamente en la base de datos.",
+            "Producto registrado correctamente.",
             "success"
         )
 
@@ -194,6 +219,141 @@ def nuevo_producto():
         "formulario_producto.html",
         form=form
     )
+
+
+# ==========================================
+# EDITAR PRODUCTO - UPDATE
+# ==========================================
+
+@app.route(
+    "/productos/editar/<int:id_producto>",
+    methods=["GET", "POST"]
+)
+def editar_producto(id_producto):
+
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM productos
+        WHERE id_producto = %s
+        """,
+        (id_producto,)
+    )
+
+    producto = cursor.fetchone()
+
+    cursor.execute(
+        """
+        SELECT id_proveedor, nombre
+        FROM proveedores
+        """
+    )
+
+    proveedores = cursor.fetchall()
+
+    cursor.close()
+    conexion.close()
+
+    if producto is None:
+
+        flash(
+            "Producto no encontrado.",
+            "danger"
+        )
+
+        return redirect(url_for("productos"))
+
+    form = ProductoForm()
+
+    form.id_proveedor.choices = [
+        (proveedor["id_proveedor"], proveedor["nombre"])
+        for proveedor in proveedores
+    ]
+
+    if form.validate_on_submit():
+
+        conexion = obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+            UPDATE productos
+            SET nombre = %s,
+                categoria = %s,
+                precio = %s,
+                stock = %s,
+                id_proveedor = %s
+            WHERE id_producto = %s
+        """
+
+        valores = (
+            form.nombre.data,
+            form.categoria.data,
+            float(form.precio.data),
+            form.stock.data,
+            form.id_proveedor.data,
+            id_producto
+        )
+
+        cursor.execute(sql, valores)
+        conexion.commit()
+
+        cursor.close()
+        conexion.close()
+
+        flash(
+            "Producto modificado correctamente.",
+            "success"
+        )
+
+        return redirect(url_for("productos"))
+
+    if not form.is_submitted():
+
+        form.nombre.data = producto["nombre"]
+        form.categoria.data = producto["categoria"]
+        form.precio.data = producto["precio"]
+        form.stock.data = producto["stock"]
+
+        if producto["id_proveedor"] is not None:
+            form.id_proveedor.data = producto["id_proveedor"]
+
+    return render_template(
+        "formulario_producto.html",
+        form=form,
+        editando=True
+    )
+# ==========================================
+# ELIMINAR PRODUCTO - DELETE
+# ==========================================
+
+@app.route("/productos/eliminar/<int:id_producto>", methods=["POST"])
+def eliminar_producto(id_producto):
+
+    conexion = obtener_conexion()
+    cursor = conexion.cursor()
+
+    cursor.execute(
+        """
+        DELETE FROM productos
+        WHERE id_producto = %s
+        """,
+        (id_producto,)
+    )
+
+    conexion.commit()
+
+    cursor.close()
+    conexion.close()
+
+    flash(
+        "Producto eliminado correctamente.",
+        "success"
+    )
+
+    return redirect(url_for("productos"))
 
 
 # ==========================================
@@ -210,7 +370,10 @@ def clientes():
     )
 
 
-@app.route("/clientes/nuevo", methods=["GET", "POST"])
+@app.route(
+    "/clientes/nuevo",
+    methods=["GET", "POST"]
+)
 def nuevo_cliente():
 
     form = ClienteForm()
@@ -252,7 +415,10 @@ def proveedores():
     )
 
 
-@app.route("/proveedores/nuevo", methods=["GET", "POST"])
+@app.route(
+    "/proveedores/nuevo",
+    methods=["GET", "POST"]
+)
 def nuevo_proveedor():
 
     form = ProveedorForm()
@@ -294,7 +460,10 @@ def facturacion():
     )
 
 
-@app.route("/facturacion/nueva", methods=["GET", "POST"])
+@app.route(
+    "/facturacion/nueva",
+    methods=["GET", "POST"]
+)
 def nueva_factura():
 
     form = FacturacionForm()
@@ -328,5 +497,7 @@ def nueva_factura():
 # ==========================================
 
 if __name__ == "__main__":
-    crear_tabla_productos()
+
+    probar_conexion()
+
     app.run(debug=True)
