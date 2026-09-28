@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Panel principal{% endblock %}
+
+{% block content %}
+
+<div class="text-center">
+
+    <h2 class="mb-3">
+        Panel principal
+    </h2>
+
+    <div class="alert alert-success">
+
+        Bienvenido,
+        <strong>{{ current_user.username }}</strong>.
+
+        Has iniciado sesión correctamente.
+
+    </div>
+
+    <p class="text-muted mb-4">
+        Desde este panel puedes acceder a los diferentes
+        módulos del sistema.
+    </p>
+
+    <div class="row g-3 justify-content-center">
+
+        <div class="col-md-3">
+            <a href="{{ url_for('productos') }}"
+               class="btn btn-primary w-100">
+                Productos
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('clientes') }}"
+               class="btn btn-success w-100">
+                Clientes
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('proveedores') }}"
+               class="btn btn-warning w-100">
+                Proveedores
+            </a>
+        </div>
+
+        <div class="col-md-3">
+            <a href="{{ url_for('facturacion') }}"
+               class="btn btn-info w-100">
+                Facturación
+            </a>
+        </div>
+
+    </div>
+
+    <div class="mt-5">
+
+        <a href="{{ url_for('logout') }}"
+           class="btn btn-danger">
+
+            Cerrar sesión
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

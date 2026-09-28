@@ -1,5 +1,19 @@
 from flask import Flask, render_template, redirect, url_for, flash
 
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user
+)
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from forms.login_form import LoginForm
+from forms.usuario_form import UsuarioForm
+from models import Usuario
+
 from forms.producto_form import ProductoForm
 from forms.cliente_form import ClienteForm
 from forms.proveedor_form import ProveedorForm
@@ -11,6 +25,41 @@ from conexion import obtener_conexion
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "clave-secreta-semana-11"
 
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+login_manager.login_view = "login"
+login_manager.login_message = "Debes iniciar sesión para acceder a esta página."
+login_manager.login_message_category = "warning"
+
+@login_manager.user_loader
+def cargar_usuario(id_usuario):
+
+    conexion = obtener_conexion()
+    cursor = conexion.cursor(dictionary=True)
+
+    cursor.execute(
+        """
+        SELECT id_usuario, username, password_hash
+        FROM usuarios
+        WHERE id_usuario = %s
+        """,
+        (id_usuario,)
+    )
+
+    usuario_db = cursor.fetchone()
+
+    cursor.close()
+    conexion.close()
+
+    if usuario_db is None:
+        return None
+
+    return Usuario(
+        usuario_db["id_usuario"],
+        usuario_db["username"],
+        usuario_db["password_hash"]
+    )
 
 # ==========================================
 # PROBAR CONEXIÓN MYSQL
@@ -19,10 +68,10 @@ app.config["SECRET_KEY"] = "clave-secreta-semana-11"
 def probar_conexion():
     try:
         conexion = obtener_conexion()
-        print("Conexión a MySQL exitosa. - app.py:22")
+        print("Conexión a MySQL exitosa. - app.py:44")
         conexion.close()
     except Exception as error:
-        print("Error al conectar con MySQL: - app.py:25")
+        print("Error al conectar con MySQL: - app.py:47")
         print(error)
 
 
@@ -120,6 +169,146 @@ def inicio():
         mensaje_bienvenida=mensaje_bienvenida
     )
 
+# ==========================================
+# AUTENTICACIÓN DE USUARIOS
+# ==========================================
+
+@app.route("/registro", methods=["GET", "POST"])
+def registro():
+    form = UsuarioForm()
+
+    if form.validate_on_submit():
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        # Comprobar que el nombre de usuario no esté registrado
+        cursor.execute(
+            "SELECT id_usuario FROM usuarios WHERE username = %s",
+            (form.username.data,)
+        )
+
+        usuario_existente = cursor.fetchone()
+
+        if usuario_existente:
+            cursor.close()
+            conexion.close()
+
+            flash(
+                "El nombre de usuario ya está registrado.",
+                "warning"
+            )
+
+            return render_template(
+                "registro.html",
+                form=form
+            )
+
+        # Proteger la contraseña antes de guardarla
+        password_hash = generate_password_hash(
+            form.password.data
+        )
+
+        cursor.execute(
+            """
+            INSERT INTO usuarios (username, password_hash)
+            VALUES (%s, %s)
+            """,
+            (
+                form.username.data,
+                password_hash
+            )
+        )
+
+        conexion.commit()
+
+        cursor.close()
+        conexion.close()
+
+        flash(
+            "Usuario registrado correctamente. Ahora puedes iniciar sesión.",
+            "success"
+        )
+
+        return redirect(url_for("login"))
+
+    return render_template(
+        "registro.html",
+        form=form
+    )
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        conexion = obtener_conexion()
+        cursor = conexion.cursor(dictionary=True)
+
+        cursor.execute(
+            """
+            SELECT id_usuario, username, password_hash
+            FROM usuarios
+            WHERE username = %s
+            """,
+            (form.username.data,)
+        )
+
+        usuario_db = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if usuario_db and check_password_hash(
+            usuario_db["password_hash"],
+            form.password.data
+        ):
+            usuario = Usuario(
+                usuario_db["id_usuario"],
+                usuario_db["username"],
+                usuario_db["password_hash"]
+            )
+
+            login_user(usuario)
+
+            flash(
+                f"Bienvenido, {usuario.username}.",
+                "success"
+            )
+
+            return redirect(url_for("dashboard"))
+
+        flash(
+            "Usuario o contraseña incorrectos.",
+            "danger"
+        )
+
+    return render_template(
+        "login.html",
+        form=form
+    )
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+
+    flash(
+        "Sesión cerrada correctamente.",
+        "success"
+    )
+
+    return redirect(url_for("login"))
+
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    return render_template(
+        "dashboard.html",
+        empresa=empresa
+    )
 
 # ==========================================
 # MÓDULO DE PRODUCTOS - MYSQL
