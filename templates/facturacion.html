@@ -11,6 +11,7 @@
 
 <div class="text-center mb-5">
     <h2>Facturación</h2>
+
     <p class="text-muted">
         Registro de facturas generadas por la empresa.
     </p>
@@ -27,6 +28,7 @@
                 <th>Cliente</th>
                 <th>Total</th>
                 <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
 
@@ -42,7 +44,9 @@
 
                 <td>{{ factura.cliente }}</td>
 
-                <td>${{ factura.total }}</td>
+                <td>
+                    ${{ "%.2f"|format(factura.total) }}
+                </td>
 
                 <td>
 
@@ -62,6 +66,31 @@
 
                 </td>
 
+                <td>
+
+                    <!-- EDITAR -->
+                    <a href="{{ url_for('editar_factura',
+                                        id_factura=factura.id_factura) }}"
+                       class="btn btn-warning btn-sm">
+                        Editar
+                    </a>
+
+                    <!-- ELIMINAR -->
+                    <form action="{{ url_for('eliminar_factura',
+                                             id_factura=factura.id_factura) }}"
+                          method="POST"
+                          class="d-inline"
+                          onsubmit="return confirm('¿Seguro que deseas eliminar esta factura?');">
+
+                        <button type="submit"
+                                class="btn btn-danger btn-sm">
+                            Eliminar
+                        </button>
+
+                    </form>
+
+                </td>
+
             </tr>
 
             {% endfor %}
@@ -71,5 +100,20 @@
     </table>
 
 </div>
+
+
+{% if facturas|length > 0 %}
+
+<div class="alert alert-success mt-4">
+    Se encontraron {{ facturas|length }} facturas registradas.
+</div>
+
+{% else %}
+
+<div class="alert alert-warning mt-4">
+    No existen facturas registradas actualmente.
+</div>
+
+{% endif %}
 
 {% endblock %}

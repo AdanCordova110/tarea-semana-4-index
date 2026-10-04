@@ -55,6 +55,27 @@
 
                 </p>
 
+                <!-- BOTÓN EDITAR -->
+                <a href="{{ url_for('editar_proveedor',
+                                    id_proveedor=proveedor.id_proveedor) }}"
+                   class="btn btn-warning btn-sm mt-2">
+                    Editar
+                </a>
+
+                <!-- BOTÓN ELIMINAR -->
+                <form action="{{ url_for('eliminar_proveedor',
+                                         id_proveedor=proveedor.id_proveedor) }}"
+                      method="POST"
+                      class="d-inline"
+                      onsubmit="return confirm('¿Seguro que deseas eliminar este proveedor?');">
+
+                    <button type="submit"
+                            class="btn btn-danger btn-sm mt-2">
+                        Eliminar
+                    </button>
+
+                </form>
+
             </div>
 
         </div>
